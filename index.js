@@ -4,21 +4,34 @@ const client = new Discord.Client()
 //archivos
 require('events').EventEmitter.defaultMaxListeners = Infinity; 
 const config = require('./config.json')
+const mongo = require('./mongo')
 const roleClaim = require('./role-claim')
 const memberCount = require('./member-count')
 const poll = require('./polls')
 const welcome	= require('./welcome')
 const firstMessage = require('./first-message')
 const privateMessage = require('./private-message')
-const command = require('./command')
+const command = require('./command');
+
 
 //comandos
-client.on('ready', () => {
+client.on('ready', async () => {
 	console.log('Ta ready pibe')
  	
-	 //comandos en archivos aparte
+	//mongo
+	
+	await mongo().then(mongoose => {
+		try {
+			console.log('Contected to mongo!')
+		} 
+		finally {
+			mongoose.connection.close()
+		}
+	}) 
+
+	//comandos en archivos aparte
 	memberCount(client)
-	roleClaim(client)
+	//roleClaim(client)
 	poll(client)
 
 	//estado
